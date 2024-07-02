@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Code
@@ -27,13 +27,13 @@ jobs:
     - name: Deploy to EC2
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        EC2_USER: ec2-user
+        EC2_USER: ubuntu
         EC2_HOST: ec2-3-91-58-91.compute-1.amazonaws.com
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key
         chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key $EC2_USER@$EC2_HOST << 'EOF'
-          cd /home/ec2-user/nest/Nestjs_Hello_world_app
+          cd /home/ubuntu/nest
           git pull origin main
           npm ci
           npm run build
