@@ -27,8 +27,8 @@ jobs:
     - name: Deploy to EC2
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        EC2_USER: ubuntu
-        EC2_HOST: ec2-3-91-58-91.compute-1.amazonaws.com
+        EC2_USER: ec2-user
+        EC2_HOST: ec2-54-159-63-227.compute-1.amazonaws.com
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key
         chmod 600 private_key
