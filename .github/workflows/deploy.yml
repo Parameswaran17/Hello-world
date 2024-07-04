@@ -25,14 +25,12 @@ jobs:
       run: npm test
 
     - name: Deploy to EC2
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        EC2_USER: ec2-user
-        EC2_HOST: ec2-54-159-63-227.compute-1.amazonaws.com
-      run: |
-        echo "$SSH_PRIVATE_KEY" > private_key
-        chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key $EC2_USER@$EC2_HOST << 'EOF'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
           # Install Node.js, npm, and pm2 if not already installed
           if ! command -v node &> /dev/null; then
             curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash -
@@ -53,4 +51,3 @@ jobs:
           
           # Restart the application with pm2
           pm2 restart "Hello world" || pm2 start dist/main.js --name "Hello world"
-        EOF
